@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Quiz Selection</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="select-style.css">
+</head>
+<body>
+    <span class="back-arrow" onclick="window.history.back();">&#8592;</span>
+    <a href="index.html" class="home-icon">&#8962;</a> <!-- 홈 아이콘 추가 -->
+    <h1 class="quiz-title" id="quiz-title">Day Quiz</h1>
+    <h2>Select Quiz Type</h2>
+    <div class="container">
+        <!-- 링크에 URL 매개변수로 선택한 Day 전달 -->
+        <a id="meaning-to-word" href="#" class="quiz-btn">Meaning → Word</a>
+        <a id="word-to-meaning" href="#" class="quiz-btn">Word → Meaning</a>
+    </div>
+    <footer class="copyright">
+        &copy; 2024. YoungchanSong All rights reserved.
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // URL 매개변수에서 Day 값 읽기
+        const params = new URLSearchParams(window.location.search);
+        const day = params.get('day'); // 예: ?day=23
+
+        // 동적으로 제목과 링크 수정
+        if (day) {
+            // 제목 업데이트
+            document.getElementById('quiz-title').textContent = `Day ${day} Quiz`;
+
+            // 링크 업데이트
+            document.getElementById('meaning-to-word').href = `quiz.html?day=${day}&type=meaning-word`;
+            document.getElementById('word-to-meaning').href = `quiz.html?day=${day}&type=word-meaning`;
+        } else {
+            // Day 정보가 없을 경우 기본 동작
+            document.getElementById('quiz-title').textContent = "Invalid Day";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+/* index.html 전용 스타일 */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212; /* 어두운 배경 */
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+/* 퀴즈 버튼 스타일 */
+.day-btn {
+    display: flex; /* 플렉스 박스를 사용하여 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin: 0; /* 마진 제거 */
+    padding: 10px 0; /* 상하 패딩 줄임 */
+    font-size: 0.9rem; /* 글자 크기 줄임 */
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #ffffff; /* 글자 색상 */
+    background-color: #007A5E; /* 버튼 배경색: 어두운 녹색 */
+   
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 50px; /* 버튼 높이 줄임 */
+}
+
+/* 버튼 hover 효과 */
+.day-btn:hover {
+    transform: scale(1.05); /* 크기 변화 줄임 */
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.5);
+}
+
+/* 선택 화면을 위한 추가 스타일 */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid; /* 그리드 레이아웃 사용 */
+    grid-template-columns: repeat(6, 1fr); /* 6열로 설정 */
+    grid-template-rows: repeat(5, 1fr); /* 5행으로 설정 */
+    gap: 10px; /* 버튼 간의 간격 */
+}

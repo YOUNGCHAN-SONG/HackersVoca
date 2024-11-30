@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="result-style.css">
+</head>
+<body>
+    <h1>Quiz Results</h1>
+    <div id="result-container">
+        <p>Loading results...</p>
+    </div>
+
+    <footer>
+        &copy; 2024. YoungchanSong All rights reserved
+    </footer>
+
+    <script>
+        // 로컬 스토리지에서 퀴즈 결과를 가져옴
+        const score = localStorage.getItem('score');
+        const totalQuestions = localStorage.getItem('totalQuestions');
+        const wrongAnswers = JSON.parse(localStorage.getItem('wrongAnswers')) || [];
+        const words = JSON.parse(localStorage.getItem('words')) || [];
+
+        // 결과 컨테이너
+        const resultContainer = document.getElementById('result-container');
+
+        // 점수와 전체 질문 개수 출력
+        resultContainer.innerHTML = `<h2>Your score: ${score} out of ${totalQuestions}</h2>`;
+
+        // 정답 및 오답 표를 생성하는 함수
+        let resultTableHTML = '<table><thead><tr><th>Word</th><th>Meaning</th><th>Status</th></tr></thead><tbody>';
+
+        // 단어 결과를 표로 출력
+        words.forEach(word => {
+            // 틀린 단어에는 빨간색, 맞은 단어에는 초록색으로 표시
+            const isWrong = wrongAnswers.some(wrong => wrong.word === word.word);
+            const status = isWrong ? 'X' : 'O';
+            const statusClass = isWrong ? 'wrong' : 'correct';
+
+            resultTableHTML += `
+                <tr class="${statusClass}">
+                    <td>${word.word}</td>
+                    <td>${word.meaning}</td>
+                    <td>${status}</td>
+                </tr>
+            `;
+        });
+
+        resultTableHTML += '</tbody></table>';
+
+        // 결과 테이블 출력
+        resultContainer.innerHTML += resultTableHTML;
+
+        // 홈 버튼
+        resultContainer.innerHTML += '<a href="index.html" class="home-button">Home</a>';
+    </script>
+</body>
+</html>

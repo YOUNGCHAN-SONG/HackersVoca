@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="quiz-style.css">
+</head>
+<body>
+    <span class="back-arrow" onclick="window.history.back();">&#8592;</span> <!-- 뒤로 가기 버튼 -->
+    <a href="index.html" class="home-icon">&#8962;</a> <!-- 홈 아이콘 추가 -->
+    <h1 id="quiz-title"></h1>
+    <div id="question-info"></div> <!-- 현재 질문 정보 표시 -->
+    <div class="container" id="quiz-container"></div>
+    <div id="feedback" class="feedback"></div>
+    <footer>
+        &copy; 2024. YoungchanSong All rights reserved
+    </footer>
+
+    <script src="quiz.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const day = params.get('day'); // URL의 day 값
+        const type = params.get('type'); // URL의 type 값
+
+        const words = dayWords[day] || [];
+        const totalQuestions = Math.min(words.length, 50); // 퀴즈 최대 질문 수
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let wrongAnswers = [];
+
+        document.getElementById('quiz-title').textContent = `Day ${day} Quiz`;
+
+        function loadQuestion() {
+            const quizContainer = document.getElementById('quiz-container');
+            const feedback = document.getElementById('feedback');
+            const questionInfo = document.getElementById('question-info');
+
+            feedback.innerHTML = ''; 
+            questionInfo.innerHTML = `Question ${currentQuestionIndex + 1} of ${totalQuestions}`;
+
+            quizContainer.classList.remove('fade-in'); 
+            quizContainer.style.opacity = 0;
+
+            setTimeout(() => {
+                quizContainer.innerHTML = ''; 
+
+                if (currentQuestionIndex < totalQuestions) {
+                    const word = words[currentQuestionIndex];
+                    const correctAnswer = type === 'meaning-word' ? word.word : word.meaning; // 타입에 따라 정답을 다르게 설정
+
+                    // 선택지 만들기
+                    const options = [correctAnswer];
+                    while (options.length < 4) {
+                        const randomWord = words[Math.floor(Math.random() * words.length)];
+                        const option = type === 'meaning-word' ? randomWord.word : randomWord.meaning;
+                        if (!options.includes(option)) {
+                            options.push(option);
+                        }
+                    }
+
+                    // 선택지 섞기
+                    options.sort(() => Math.random() - 0.5);
+
+                    // 문제 유형에 따라 퀴즈 내용 업데이트
+                    if (type === 'meaning-word') {
+                        // 'meaning-word': 뜻을 보고 단어를 맞추는 문제
+                        quizContainer.innerHTML = `<h2>${word.meaning}</h2>`;
+                    } else if (type === 'word-meaning') {
+                        // 'word-meaning': 단어를 보고 뜻을 맞추는 문제
+                        quizContainer.innerHTML = `<h2>${word.word}</h2>`;
+                    }
+
+                    // 선택지 버튼 생성
+                    options.forEach(option => {
+                        const button = document.createElement('button');
+                        button.textContent = option;  // 선택지로 단어 또는 뜻 제공
+                        button.classList.add('option-btn');
+                        button.addEventListener('click', () => selectAnswer(option, correctAnswer, word));
+                        quizContainer.appendChild(button);
+                    });
+
+                    quizContainer.style.opacity = 1; 
+                    quizContainer.classList.add('fade-in'); 
+                } else {
+                    displayResults(); 
+                }
+            }, 300); 
+        }
+
+        function selectAnswer(selectedOption, correctAnswer, word) {
+            const feedback = document.getElementById('feedback');
+            if (selectedOption === correctAnswer) {
+                score++;
+                feedback.innerHTML = `<p class="feedback-correct">Correct!</p>`;
+            } else {
+                feedback.innerHTML = `<p class="feedback-wrong">Wrong! The correct answer was: ${correctAnswer}</p>`;
+                wrongAnswers.push(word); 
+            }
+            currentQuestionIndex++; 
+            setTimeout(loadQuestion, 1500); 
+        }
+
+        function displayResults() {
+            // 로컬 스토리지에 퀴즈 결과 저장
+            localStorage.setItem('score', score);
+            localStorage.setItem('totalQuestions', totalQuestions);
+            localStorage.setItem('wrongAnswers', JSON.stringify(wrongAnswers));
+            localStorage.setItem('words', JSON.stringify(words)); // 단어 목록 저장
+
+            // 결과 페이지로 이동
+            window.location.href = 'result.html'; 
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
